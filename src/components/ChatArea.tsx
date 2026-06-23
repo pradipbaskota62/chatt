@@ -400,14 +400,14 @@ export default function ChatArea() {
                           className="w-full h-10 object-cover group-hover:scale-105 transition-transform" 
                           referrerPolicy="no-referrer"
                         />
-                        <span className="p-0.5 font-bold text-slate-550 truncate overflow-hidden max-w-full">
+                        <span className="p-0.5 font-bold text-slate-500 truncate overflow-hidden max-w-full">
                           {img.label}
                         </span>
                       </button>
                     ))}
                   </div>
                   
-                  <div className="border-t border-slate-805 pt-2">
+                  <div className="border-t border-slate-800 pt-2">
                     <label className="block text-[8px] text-slate-500 uppercase font-bold tracking-wider mb-0.5">
                       Paste source URL
                     </label>
@@ -431,7 +431,7 @@ export default function ChatArea() {
                 maxLength={1500}
                 onChange={(e) => setText(e.target.value)}
                 placeholder={`Message #${getHeaderDisplayName().replace(/^[#💬]\s*/, "")}`}
-                className="w-full bg-transparent border-none text-xs focus:outline-none text-slate-200 placeholder:text-slate-650"
+                className="w-full bg-transparent border-none text-xs focus:outline-none text-slate-200 placeholder:text-slate-600"
               />
               
               {/* Quick insert emoji trigger */}

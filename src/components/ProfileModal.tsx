@@ -51,7 +51,7 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
         id="profile-modal" 
         className="bg-slate-900 border border-slate-800 rounded-xl w-full max-w-md shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-120"
       >
-        <div className="flex justify-between items-center px-5 py-3.5 border-b border-slate-850">
+        <div className="flex justify-between items-center px-5 py-3.5 border-b border-slate-800">
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-indigo-400 animate-pulse" />
             <h3 className="font-bold text-sm text-white">Profile Customizer</h3>
@@ -117,7 +117,7 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                   placeholder="Enter alias"
                   className="w-full px-2.5 py-1.5 pl-8 rounded bg-slate-950 border border-slate-800 text-slate-200 placeholder:text-slate-700 focus:outline-none focus:ring-1 focus:ring-indigo-600 transition-all text-xs font-semibold"
                 />
-                <User className="absolute left-2.5 top-2 text-slate-550 w-3.5 h-3.5" />
+                <User className="absolute left-2.5 top-2 text-slate-500 w-3.5 h-3.5" />
               </div>
             </div>
 
@@ -154,7 +154,7 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
             </div>
           </div>
 
-          <div className="flex justify-end gap-2 pt-3 border-t border-slate-855">
+          <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
             <button
               type="button"
               onClick={onClose}

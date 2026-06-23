@@ -30,7 +30,7 @@ export default function NotificationBanner() {
               <img 
                 src={notif.avatar} 
                 alt="Notif Source" 
-                className="w-8 h-8 rounded-lg object-contain bg-slate-950 border border-slate-855 shrink-0"
+                className="w-8 h-8 rounded-lg object-contain bg-slate-950 border border-slate-800 shrink-0"
                 referrerPolicy="no-referrer"
               />
             ) : (
@@ -47,7 +47,7 @@ export default function NotificationBanner() {
                 </span>
                 <span className="w-1 h-1 bg-indigo-500 rounded-full animate-ping shrink-0" />
               </div>
-              <p className="text-[10px] text-slate-350 font-normal leading-snug line-clamp-2">
+              <p className="text-[10px] text-slate-300 font-normal leading-snug line-clamp-2">
                 {notif.body}
               </p>
               <span className="text-[9px] text-slate-500 mt-0.5 block">

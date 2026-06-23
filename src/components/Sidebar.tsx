@@ -133,7 +133,7 @@ export default function Sidebar({ onOpenProfile, onOpenNotifications }: SidebarP
             />
             <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border border-slate-900 ${
               currentUserProfile?.status === "online" ? "bg-emerald-500" :
-              currentUserProfile?.status === "away" ? "bg-amber-505" : "bg-slate-600"
+              currentUserProfile?.status === "away" ? "bg-amber-500" : "bg-slate-600"
             }`}></span>
           </div>
 
@@ -164,7 +164,7 @@ export default function Sidebar({ onOpenProfile, onOpenNotifications }: SidebarP
             type="button"
             title="Log Out Session"
             onClick={logOutAndClean}
-            className="p-1 rounded text-slate-400 hover:text-rose-400 hover:bg-slate-850 transition-colors"
+            className="p-1 rounded text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors"
           >
             <LogOut className="w-3.5 h-3.5" />
           </button>
@@ -185,7 +185,7 @@ export default function Sidebar({ onOpenProfile, onOpenNotifications }: SidebarP
                 playToggleClick(true);
                 setShowCreateModal(true);
               }}
-              className="p-0.5 rounded bg-slate-800 text-indigo-400 hover:text-indigo-300 hover:bg-slate-750 cursor-pointer"
+              className="p-0.5 rounded bg-slate-800 text-indigo-400 hover:text-indigo-300 hover:bg-slate-700 cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
             </button>
@@ -242,8 +242,8 @@ export default function Sidebar({ onOpenProfile, onOpenNotifications }: SidebarP
               const dmAvatar = getDMAvatar(chan);
               const dmStatus = getDMStatus(chan);
               
-              const statusColor = dmStatus === "online" ? "bg-emerald-500" 
-                : dmStatus === "away" ? "bg-amber-550" 
+               const statusColor = dmStatus === "online" ? "bg-emerald-500" 
+                : dmStatus === "away" ? "bg-amber-500" 
                 : "bg-slate-600";
 
               return (
@@ -253,7 +253,7 @@ export default function Sidebar({ onOpenProfile, onOpenNotifications }: SidebarP
                   className={`w-full flex items-center gap-2 px-2 py-1.5 rounded transition-all text-xs ${
                     isActive 
                       ? "bg-slate-800 text-white font-medium" 
-                      : "text-slate-400 hover:bg-slate-805 hover:text-slate-200"
+                      : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
                   }`}
                 >
                   <div className="relative shrink-0">
@@ -324,7 +324,7 @@ export default function Sidebar({ onOpenProfile, onOpenNotifications }: SidebarP
                     </div>
                   </div>
 
-                  <span className="text-[9px] bg-transparent text-slate-500 px-1 py-0.5 rounded group-hover:text-indigo-400 group-hover:bg-slate-805 transition-colors flex items-center gap-0.5 whitespace-nowrap">
+                  <span className="text-[9px] bg-transparent text-slate-500 px-1 py-0.5 rounded group-hover:text-indigo-400 group-hover:bg-slate-800 transition-colors flex items-center gap-0.5 whitespace-nowrap">
                     <UserPlus className="w-2.5 h-2.5" /> DM
                   </span>
                 </div>
@@ -349,7 +349,7 @@ export default function Sidebar({ onOpenProfile, onOpenNotifications }: SidebarP
             className="bg-slate-900 border border-slate-800 rounded-xl w-full max-w-sm shadow-2xl p-5 space-y-4 animate-in fade-in zoom-in-95 duration-150"
           >
             <h3 className="text-base font-bold text-white flex items-center gap-2 mb-1">
-              <Radio className="w-4 h-4 text-indigo-450 animate-pulse" /> Launch a Public Channel
+              <Radio className="w-4 h-4 text-indigo-400 animate-pulse" /> Launch a Public Channel
             </h3>
 
             <div className="space-y-3">
@@ -365,9 +365,9 @@ export default function Sidebar({ onOpenProfile, onOpenNotifications }: SidebarP
                     value={newChanName}
                     onChange={(e) => setNewChanName(e.target.value.toLowerCase().replace(/\s+/g, "-"))}
                     placeholder="e.g. tech-talk"
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg py-2 px-3 pl-8 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-600 text-slate-200 placeholder:text-slate-750"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-lg py-2 px-3 pl-8 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-600 text-slate-200 placeholder:text-slate-600"
                   />
-                  <span className="absolute left-3 top-2 text-slate-500 text-xs">#</span>
+                  <span className="absolute left-3 top-2 text-slate-550 text-xs">#</span>
                 </div>
               </div>
 
@@ -381,7 +381,7 @@ export default function Sidebar({ onOpenProfile, onOpenNotifications }: SidebarP
                   onChange={(e) => setNewChanDesc(e.target.value)}
                   placeholder="What is this channel about?"
                   rows={2}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-600 text-slate-200 placeholder:text-slate-750 resize-none"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-600 text-slate-200 placeholder:text-slate-600 resize-none"
                 />
               </div>
             </div>
@@ -397,7 +397,7 @@ export default function Sidebar({ onOpenProfile, onOpenNotifications }: SidebarP
               <button
                 type="submit"
                 disabled={isCreating}
-                className="px-3.5 py-1.5 text-xs bg-indigo-600 hover:bg-indigo-550 text-white font-medium rounded disabled:opacity-40"
+                className="px-3.5 py-1.5 text-xs bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded disabled:opacity-40"
               >
                 {isCreating ? "Establishing..." : "Establish"}
               </button>

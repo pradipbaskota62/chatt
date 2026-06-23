@@ -69,7 +69,7 @@ export default function NotificationSettings({ isOpen, onClose }: NotificationSe
         id="notification-settings-modal" 
         className="bg-slate-900 border border-slate-800 rounded-xl w-full max-w-lg shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-120"
       >
-        <div className="flex justify-between items-center px-5 py-3.5 border-b border-slate-850">
+        <div className="flex justify-between items-center px-5 py-3.5 border-b border-slate-800">
           <div className="flex items-center gap-2">
             <Bell className="w-4 h-4 text-indigo-400 animate-bounce" />
             <h3 className="font-bold text-sm text-white">Push Alerts & Notification Settings</h3>
@@ -149,7 +149,7 @@ export default function NotificationSettings({ isOpen, onClose }: NotificationSe
             {/* Operating System Native Toggle */}
             <div className="flex items-center justify-between p-3 bg-slate-950 rounded-lg border border-slate-800">
               <div className="flex gap-2.5">
-                <div className="p-1.5 bg-indigo-500/10 rounded text-indigo-450 shrink-0 self-center">
+                <div className="p-1.5 bg-indigo-550/10 rounded text-indigo-400 shrink-0 self-center">
                   <Monitor className="w-3.5 h-3.5" />
                 </div>
                 <div>
@@ -180,7 +180,7 @@ export default function NotificationSettings({ isOpen, onClose }: NotificationSe
           </div>
 
           {/* Test Sandbox and Injector */}
-          <div className="pt-3 border-t border-slate-855">
+          <div className="pt-3 border-t border-slate-800">
             <div className="flex items-center gap-1.5 mb-2">
               <Settings className="w-3.5 h-3.5 text-slate-500" />
               <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Instant Push Simulator Tool</h4>
@@ -234,11 +234,11 @@ export default function NotificationSettings({ isOpen, onClose }: NotificationSe
           </div>
         </div>
 
-        <div className="flex justify-end gap-2 px-5 py-3 bg-slate-950 border-t border-slate-850">
+        <div className="flex justify-end gap-2 px-5 py-3 bg-slate-950 border-t border-slate-800">
           <button
             type="button"
             onClick={onClose}
-            className="px-3 py-1.5 text-xs bg-slate-900 border border-slate-800 text-slate-350 rounded font-semibold transition-colors hover:bg-slate-850"
+            className="px-3 py-1.5 text-xs bg-slate-900 border border-slate-800 text-slate-350 rounded font-semibold transition-colors hover:bg-slate-800"
           >
             Done
           </button>
