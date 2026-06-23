@@ -1,0 +1,6 @@
+{
+  "name": "Firebase Chat App",
+  "description": "A fully functional real-time chat application featuring Firebase Authentication, Cloud Firestore messaging, custom channels, and localized notification alerts.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

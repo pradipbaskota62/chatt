@@ -1,0 +1,139 @@
+rules_version = '2';
+service cloud_firestore {
+  match /databases/{database}/documents {
+
+    // 1. Global Catch-All Safety Net (Default-Deny)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 3. Reusable Global Primitives
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedUser() {
+      return isSignedIn() && (request.auth.token.email_verified == true);
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // 2. Validation Blueprints for Entities
+
+    function isValidUserProfile(user) {
+      return user.uid is string && user.uid.size() <= 128 &&
+             user.displayName is string && user.displayName.size() <= 100 &&
+             user.email is string && user.email.size() <= 128 &&
+             user.photoURL is string && user.photoURL.size() <= 500 &&
+             user.status is string && (user.status == 'online' || user.status == 'offline' || user.status == 'away') &&
+             user.lastSeen == request.time &&
+             (user.keys().size() == 6 || (user.keys().size() == 7 && user.pushToken is string && user.pushToken.size() <= 256));
+    }
+
+    function isValidChannel(channel) {
+      return channel.id is string && channel.id.size() <= 128 &&
+             channel.name is string && channel.name.size() <= 100 &&
+             channel.description is string && channel.description.size() <= 500 &&
+             channel.type is string && (channel.type == 'public' || channel.type == 'direct') &&
+             channel.createdBy is string && channel.createdBy.size() <= 128 &&
+             channel.createdAt == request.time &&
+             channel.memberIds is list && channel.memberIds.size() <= 100 &&
+             channel.keys().hasAll(['id', 'name', 'description', 'type', 'createdBy', 'createdAt', 'memberIds']) &&
+             channel.keys().size() == 7;
+    }
+
+    function isValidMessage(msg) {
+      return msg.id is string && msg.id.size() <= 128 &&
+             msg.roomId is string && msg.roomId.size() <= 128 &&
+             msg.senderId is string && msg.senderId.size() <= 128 &&
+             msg.senderName is string && msg.senderName.size() <= 100 &&
+             msg.senderPhoto is string && msg.senderPhoto.size() <= 500 &&
+             msg.content is string && msg.content.size() <= 2000 &&
+             msg.createdAt == request.time &&
+             (msg.keys().size() == 7 || (msg.keys().size() == 8 && msg.imageUrl is string && msg.imageUrl.size() <= 500));
+    }
+
+    // --- Users Profiles Collection ---
+    match /users/{userId} {
+      allow get: if isVerifiedUser() && isValidId(userId);
+      allow list: if isVerifiedUser(); // Standard profile lookup is safe
+      
+      allow create: if isVerifiedUser() && isValidId(userId) && isOwner(userId) && isValidUserProfile(request.resource.data);
+      
+      allow update: if isVerifiedUser() && isValidId(userId) && isOwner(userId) && (
+        // Action: Change status or general profile field, keeping immutable keys intact
+        request.resource.data.uid == resource.data.uid &&
+        request.resource.data.email == resource.data.email &&
+        (
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'lastSeen']) ||
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['displayName', 'photoURL', 'lastSeen']) ||
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['pushToken', 'lastSeen'])
+        )
+      );
+      
+      allow delete: if false; // Profiles cannot be manually destroyed to avoid broken states
+    }
+
+    // --- Channels Collection ---
+    match /channels/{channelId} {
+      allow get: if isVerifiedUser() && isValidId(channelId);
+      // Constraint: Non-admin list secures reads. Public channels allow list. DM channels only query if member.
+      allow list: if isVerifiedUser() && (
+        resource.data.type == 'public' || 
+        request.auth.uid in resource.data.memberIds
+      );
+
+      allow create: if isVerifiedUser() && isValidId(channelId) && 
+                      request.resource.data.createdBy == request.auth.uid &&
+                      isValidChannel(request.resource.data);
+
+      allow update: if isVerifiedUser() && isValidId(channelId) && (
+        // Ensure immutable values remain protected
+        request.resource.data.id == resource.data.id &&
+        request.resource.data.createdBy == resource.data.createdBy &&
+        request.resource.data.createdAt == resource.data.createdAt &&
+        request.resource.data.type == resource.data.type &&
+        (
+          // Action 1: Member joining or leaving DMs/Public Rooms
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['memberIds']) ||
+          // Action 2: Modification of name and description of room
+          (
+            request.auth.uid in resource.data.memberIds &&
+            request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name', 'description'])
+          )
+        )
+      );
+
+      allow delete: if isVerifiedUser() && isValidId(channelId) && resource.data.createdBy == request.auth.uid;
+
+      // --- Messages Subcollection (Inside Channels) ---
+      match /messages/{messageId} {
+        allow get: if isVerifiedUser() && isValidId(messageId);
+        // Constraint: Message listening only allowed for channel members
+        allow list: if isVerifiedUser() && (
+          get(/databases/$(database)/documents/channels/$(channelId)).data.type == 'public' ||
+          request.auth.uid in get(/databases/$(database)/documents/channels/$(channelId)).data.memberIds
+        );
+
+        allow create: if isVerifiedUser() && isValidId(messageId) &&
+                        request.resource.data.senderId == request.auth.uid &&
+                        request.resource.data.roomId == channelId &&
+                        isValidMessage(request.resource.data) &&
+                        // Master Gate: must be a member or room must be public
+                        (
+                          get(/databases/$(database)/documents/channels/$(channelId)).data.type == 'public' ||
+                          request.auth.uid in get(/databases/$(database)/documents/channels/$(channelId)).data.memberIds
+                        );
+
+        allow update: if false; // Messages are immutable after transmission (no unmonitored editing)
+        allow delete: if isVerifiedUser() && isValidId(messageId) && resource.data.senderId == request.auth.uid;
+      }
+    }
+  }
+}

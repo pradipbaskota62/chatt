@@ -1,0 +1,64 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Represents a user profile in the chat app",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "The unique user authentication ID" },
+        "displayName": { "type": "string", "description": "The display name of the user" },
+        "email": { "type": "string", "format": "email", "description": "The primary email address of the user" },
+        "photoURL": { "type": "string", "description": "The avatar URL for the user profile" },
+        "status": { "type": "string", "enum": ["online", "offline", "away"], "description": "The current presence status" },
+        "lastSeen": { "type": "string", "format": "date-time", "description": "Timestamp of the user last being active" },
+        "pushToken": { "type": "string", "description": "In-app simulated or browser Push notification permission token" }
+      },
+      "required": ["uid", "displayName", "email", "photoURL", "status", "lastSeen"]
+    },
+    "Channel": {
+      "title": "Channel",
+      "description": "Represents a chat channel or conversation room",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique channel identifier" },
+        "name": { "type": "string", "description": "Display name of the channel" },
+        "description": { "type": "string", "description": "Purpose or description of the channel" },
+        "type": { "type": "string", "enum": ["public", "direct"], "description": "Types of channels: group public chat or DM" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp of channel creation" },
+        "createdBy": { "type": "string", "description": "UID of the creator" },
+        "memberIds": { "type": "array", "description": "Array of member UIDs for private/direct messaging" }
+      },
+      "required": ["id", "name", "description", "type", "createdAt", "createdBy", "memberIds"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "Represents a chat message sent in a channel",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique message identifier" },
+        "roomId": { "type": "string", "description": "The channel or room ID this message belongs to" },
+        "senderId": { "type": "string", "description": "UID of the sender" },
+        "senderName": { "type": "string", "description": "Display name of the sender at the time of send" },
+        "senderPhoto": { "type": "string", "description": "Avatar of the sender at the time of send" },
+        "content": { "type": "string", "description": "The textual content of the message" },
+        "imageUrl": { "type": "string", "description": "Optional image attachment URL" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp of when the message was sent" }
+      },
+      "required": ["id", "roomId", "senderId", "senderName", "senderPhoto", "content", "createdAt"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": "User",
+      "description": "The main collection storing public and private profile data of users"
+    },
+    "channels/{channelId}": {
+      "schema": "Channel",
+      "description": "Chat channels and DM groups information"
+    },
+    "channels/{channelId}/messages/{messageId}": {
+      "schema": "Message",
+      "description": "The subcollection containing individual messages sent inside a high-level chat channel"
+    }
+  }
+}
